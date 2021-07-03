@@ -116,7 +116,7 @@ function registerRecommend (app) {
         code: SUCCESS,
         data: {
           // 包赚推荐页轮播数据
-          carousels: wrapRecommendCarousels(result),
+          sliders: wrapRecommendCarousels(result),
           // 包装推荐页专辑数据
           albums: wrapRecommendAlbums(result)
         }
@@ -157,10 +157,10 @@ function wrapRecommendAlbums (data) {
  */
 function wrapRecommendCarousels (data) {
   const originalData = data.focus.data.shelf.v_niche[0].v_card
-  const carousels = []
+  const sliders = []
 
   if (!originalData || originalData.length === 0) {
-    return carousels
+    return sliders
   }
 
   // 根据原始数据的长度来判定，最多只获取 10 调数据
@@ -168,16 +168,16 @@ function wrapRecommendCarousels (data) {
   for (let i = 0; i < validLength; i++) {
     const datum = originalData[i]
 
-    const carousel = {
+    const slider = {
       id: datum.id,
       pic: datum.cover,
       link: handleSpecialLinkPrefix(datum)
     }
 
-    carousels.push(carousel)
+    sliders.push(slider)
   }
 
-  return carousels
+  return sliders
 }
 
 /**
