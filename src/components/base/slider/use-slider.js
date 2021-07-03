@@ -4,7 +4,7 @@
 import BScroll from '@better-scroll/core'
 import Slide from '@better-scroll/slide'
 
-import { onMounted, onUnMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 // 注册 BetterScroll 的 Slide 组件
 BScroll.use(Slide)
@@ -38,7 +38,7 @@ export default function useSlider (wrapperRef) {
   })
 
   // 销毁组件
-  onUnMounted(() => {
+  onUnmounted(() => {
     slider.value.destroy()
   })
 

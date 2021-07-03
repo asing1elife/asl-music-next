@@ -194,7 +194,7 @@ function handleSpecialLinkPrefix ({ jumptype, subid, id }) {
   const currentPrefix = specialLinkPrefix[jumptype]
   if (currentPrefix) {
     return currentPrefix + (subid || id) + '.html'
-  } else if (item.jumptype === 3001) {
+  } else if (jumptype === 3001) {
     return id
   }
 
