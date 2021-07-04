@@ -1,28 +1,51 @@
 <template>
   <div class="recommend">
-    <div class="slider-wrapper">
-      <div class="slider-content">
-        <m-slider
-          v-if="sliders.length"
-          :sliders="sliders"
-        ></m-slider>
+    <m-scroll class="recommend-content">
+      <div>
+        <div class="slider-wrapper">
+          <div class="slider-content">
+            <m-slider
+              v-if="sliders.length"
+              :sliders="sliders"
+            ></m-slider>
+          </div>
+        </div>
+        <div class="album-wrapper">
+          <p class="album-title">热门歌单推荐</p>
+          <div class="album-content">
+            <div
+              class="album-item"
+              v-for="album in albums"
+              :key="album.id"
+            >
+              <img :src="album.pic">
+              <div class="info">
+                <p class="username">{{album.username}}</p>
+                <p class="title">{{album.title}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </m-scroll>
   </div>
 </template>
 
 <script>
   import recommendService from '@/service/recommend'
   import MSlider from '@/components/base/slider'
+  import MScroll from '@/components/base/scroll'
 
   export default {
     name: 'recommend',
     components: {
-      MSlider
+      MSlider,
+      MScroll
     },
     data () {
       return {
-        sliders: []
+        sliders: [],
+        albums: []
       }
     },
     async created () {
@@ -33,6 +56,7 @@
         const recommends = await recommendService.list()
 
         this.sliders = recommends.sliders
+        this.albums = recommends.albums
       }
     }
   }
@@ -45,19 +69,56 @@
     top: 88px;
     bottom: 0;
 
-    .slider-wrapper {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-top: 40%;
+    .recommend-content {
+      height: 100%;
       overflow: hidden;
 
-      .slider-content {
-        position: absolute;
-        top: 0;
-        left: 0;
+      .slider-wrapper {
+        position: relative;
         width: 100%;
-        height: 100%;
+        height: 0;
+        padding-top: 40%;
+        overflow: hidden;
+
+        .slider-content {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .album-wrapper {
+        .album-title {
+          margin: 30px 0;
+          font-size: $font-size-large;
+          color: $color-theme;
+          text-align: center;
+        }
+
+        .album-item {
+          display: flex;
+          margin: 0 20px 20px 20px;
+
+          img {
+            width: 70px;
+            height: 70px;
+            overflow: hidden;
+          }
+
+          .info {
+            margin-left: 20px;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .title {
+              color: $color-text-d;
+            }
+          }
+        }
       }
     }
   }
