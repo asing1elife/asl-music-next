@@ -18,7 +18,7 @@
               v-for="album in albums"
               :key="album.id"
             >
-              <img :src="album.pic">
+              <img v-lazy="album.pic">
               <div class="info">
                 <p class="username">{{album.username}}</p>
                 <p class="title">{{album.title}}</p>
