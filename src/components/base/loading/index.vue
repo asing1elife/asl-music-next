@@ -10,10 +10,14 @@
 <script>
   export default {
     name: 'm-loading',
-    props: {
-      tip: {
-        type: String,
-        default: ''
+    data () {
+      return {
+        tip: ''
+      }
+    },
+    methods: {
+      setTip (tip) {
+        this.tip = tip
       }
     }
   }

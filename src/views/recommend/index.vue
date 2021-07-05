@@ -1,5 +1,8 @@
 <template>
-  <div class="recommend" v-loading="loading">
+  <div
+    class="recommend"
+    v-loading:[tip]="loading"
+  >
     <m-scroll class="recommend-content">
       <div>
         <div class="slider-wrapper">
@@ -44,6 +47,7 @@
     },
     data () {
       return {
+        tip: '正在加载推荐数据',
         sliders: [],
         albums: []
       }
