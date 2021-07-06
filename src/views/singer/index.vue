@@ -5,8 +5,20 @@
 </template>
 
 <script>
+  import singerService from '@/service/singer'
+
   export default {
-    name: 'index'
+    name: 'index',
+    data () {
+      return {
+        singers: []
+      }
+    },
+    async created () {
+      this.singers = await singerService.list()
+
+      console.log(this.singers)
+    }
   }
 </script>
 

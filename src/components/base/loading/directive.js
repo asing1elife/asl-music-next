@@ -52,8 +52,6 @@ function append (el) {
     addClass(el, POSITION_CLS)
   }
 
-  debugger
-
   // el 本身是使用 v-loading 的元素，instance.$el 则是动态创建出来的元素
   el.appendChild(el.instance.$el)
 }
