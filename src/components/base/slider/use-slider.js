@@ -9,13 +9,15 @@ import { onMounted, onUnmounted, ref } from 'vue'
 // 注册 BetterScroll 的 Slide 组件
 BScroll.use(Slide)
 
-export default function useSlider (wrapperRef) {
-  const slider = ref(null)
+export default function useSlider () {
+  const rootRef = ref(null)
   const currentPageIndex = ref(0)
+  // 接收轮播的值，用于销毁
+  let sliderVal
 
   // 注册组件
   onMounted(() => {
-    const sliderVal = slider.value = new BScroll(wrapperRef.value, {
+    sliderVal = new BScroll(rootRef.value, {
       click: true,
       scrollX: true,
       scrollY: false,
@@ -39,11 +41,11 @@ export default function useSlider (wrapperRef) {
 
   // 销毁组件
   onUnmounted(() => {
-    slider.value.destroy()
+    sliderVal.destroy()
   })
 
   return {
-    slider,
+    rootRef,
     currentPageIndex
   }
 }

@@ -23,7 +23,6 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
   import useSlider from '@/components/base/slider/use-slider'
 
   export default {
@@ -37,8 +36,7 @@
       }
     },
     setup () {
-      const rootRef = ref(null)
-      const { currentPageIndex } = useSlider(rootRef)
+      const { rootRef, currentPageIndex } = useSlider()
 
       return {
         rootRef,
