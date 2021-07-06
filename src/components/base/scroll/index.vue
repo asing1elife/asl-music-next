@@ -25,13 +25,14 @@
     setup (props, { emit }) {
       const rootRef = ref(null)
 
-      useScroll(rootRef, {
+      const scroll = useScroll(rootRef, {
         click: props.click,
         probeType: props.probeType
       }, emit)
 
       return {
-        rootRef
+        rootRef,
+        scroll
       }
     }
   }

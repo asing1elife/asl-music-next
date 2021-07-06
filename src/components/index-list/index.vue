@@ -1,6 +1,7 @@
 <template>
   <m-scroll
     class="index-list"
+    ref="scrollRef"
     :probe-type="3"
     @scroll="onScroll"
   >
@@ -30,12 +31,28 @@
     >
       {{fixedLabel}}
     </div>
+    <ul
+      class="fixed-labels"
+      @touchstart.stop.prevent="onTouchStart"
+      @touchmove.stop.prevent="onTouchMove"
+    >
+      <li
+        class="label-item"
+        v-for="(label, index) in labels"
+        :data-index="index"
+        :key="label"
+        :class="{'active' : label === fixedLabel}"
+      >
+        {{label}}
+      </li>
+    </ul>
   </m-scroll>
 </template>
 
 <script>
   import MScroll from '@/components/base/scroll'
   import useFixed from '@/components/index-list/use-fixed'
+  import useShortcut from '@/components/index-list/use-shortcut'
 
   export default {
     name: 'm-index-list',
@@ -49,13 +66,20 @@
       MScroll
     },
     setup (props) {
+      // 实现列表滚动时，顶栏标签动态变化
       const { groupRef, fixedLabel, fixedStyle, onScroll } = useFixed(props)
+      // 实现点击右侧快捷栏时，列表动态变化
+      const { scrollRef, labels, onTouchStart, onTouchMove } = useShortcut(props, groupRef)
 
       return {
         groupRef,
+        scrollRef,
         fixedLabel,
         fixedStyle,
-        onScroll
+        labels,
+        onScroll,
+        onTouchStart,
+        onTouchMove
       }
     }
   }
@@ -105,6 +129,27 @@
       font-size: $font-size-small;
       color: $color-text-l;
       background-color: $color-highlight-background;
+    }
+
+    .fixed-labels {
+      position: fixed;
+      right: 5px;
+      top: 50%;
+      transform: translate3d(0, -50%, 0);
+      background-color: $color-background-d;
+      padding: 20px 0;
+      border-radius: 15px;
+      color: $color-text-l;
+
+      .label-item {
+        text-align: center;
+        margin-bottom: 5px;
+        padding: 0 5px;
+
+        &.active {
+          color: $color-theme;
+        }
+      }
     }
   }
 </style>

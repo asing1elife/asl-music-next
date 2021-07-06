@@ -28,4 +28,7 @@ export default function useScroll (wrapperRef, options, emit) {
   onUnmounted(() => {
     scroll.value.destroy()
   })
+
+  // 对外暴露 BScroll 实例
+  return scroll
 }
