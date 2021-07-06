@@ -162,8 +162,12 @@ function registerSinger (app) {
 
       res.json({
         code: SUCCESS,
-        data: wrapSingers(result)
+        data: {
+          singers: wrapSingers(result)
+        }
       })
+    }).catch(err => {
+      console.log(err)
     })
   })
 }

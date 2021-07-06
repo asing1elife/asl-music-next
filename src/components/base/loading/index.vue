@@ -12,7 +12,7 @@
     name: 'm-loading',
     data () {
       return {
-        tip: ''
+        tip: '正在加载'
       }
     },
     methods: {
