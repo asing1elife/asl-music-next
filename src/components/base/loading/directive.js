@@ -57,6 +57,10 @@ function append (el) {
 }
 
 function remove (el) {
+  if (!el.contains(el.instance.$el)) {
+    return
+  }
+
   // 移除时则可以直接移除
   removeClass(el, POSITION_CLS)
 

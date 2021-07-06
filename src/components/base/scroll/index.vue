@@ -14,14 +14,21 @@
       click: {
         type: Boolean,
         default: true
+      },
+      probeType: {
+        type: Number,
+        default: 0
       }
     },
-    setup (props) {
+    // 支持派发的事件
+    emits: ['scroll'],
+    setup (props, { emit }) {
       const rootRef = ref(null)
 
       useScroll(rootRef, {
-        click: props.click
-      })
+        click: props.click,
+        probeType: props.probeType
+      }, emit)
 
       return {
         rootRef

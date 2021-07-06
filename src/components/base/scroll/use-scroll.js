@@ -7,7 +7,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 // https://better-scroll.github.io/docs/zh-CN/plugins/observe-dom.html
 BScroll.use(ObserveDOM)
 
-export default function useScroll (wrapperRef, options) {
+export default function useScroll (wrapperRef, options, emit) {
   const scroll = ref(null)
 
   onMounted(() => {
@@ -16,6 +16,13 @@ export default function useScroll (wrapperRef, options) {
       observeDOM: true,
       ...options
     })
+
+    if (options.probeType > 0) {
+      scroll.value.on('scroll', pos => {
+        // 监听滚动，并将当前的偏移量派发到 scroll 事件
+        emit('scroll', pos)
+      })
+    }
   })
 
   onUnmounted(() => {
