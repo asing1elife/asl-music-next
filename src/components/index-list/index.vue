@@ -17,6 +17,7 @@
             class="group-item"
             v-for="item in group.list"
             :key="item.id"
+            @click="onSingerClick(item)"
           >
             <img v-lazy="item.pic">
             <span>{{item.name}}</span>
@@ -56,20 +57,25 @@
 
   export default {
     name: 'm-index-list',
+    components: {
+      MScroll
+    },
     props: {
       groups: {
         type: Array,
         default: () => []
       }
     },
-    components: {
-      MScroll
-    },
-    setup (props) {
+    emits: ['select'],
+    setup (props, { emit }) {
       // 实现列表滚动时，顶栏标签动态变化
       const { groupRef, fixedLabel, fixedStyle, onScroll } = useFixed(props)
       // 实现点击右侧快捷栏时，列表动态变化
       const { scrollRef, labels, onTouchStart, onTouchMove } = useShortcut(props, groupRef)
+
+      function onSingerClick (singer) {
+        emit('select', singer)
+      }
 
       return {
         groupRef,
@@ -79,7 +85,8 @@
         labels,
         onScroll,
         onTouchStart,
-        onTouchMove
+        onTouchMove,
+        onSingerClick
       }
     }
   }

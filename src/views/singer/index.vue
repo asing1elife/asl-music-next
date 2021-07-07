@@ -1,6 +1,14 @@
 <template>
-  <div class="singer" v-loading="!singers.length">
-    <m-index-list :groups="singers"></m-index-list>
+  <div
+    class="singer"
+    v-loading="!singers.length"
+  >
+    <m-index-list
+      :groups="singers"
+      @select="onSingerSelect"
+    >
+    </m-index-list>
+    <router-view :singer="singer"></router-view>
   </div>
 </template>
 
@@ -9,19 +17,29 @@
   import singerService from '@/service/singer'
 
   export default {
-    name: 'index',
+    name: 'singer',
     components: {
       MIndexList
     },
     data () {
       return {
-        singers: []
+        singers: [],
+        singer: undefined
       }
     },
     async created () {
       const result = await singerService.list()
 
       this.singers = result.singers
+    },
+    methods: {
+      onSingerSelect (singer) {
+        this.singer = singer
+
+        this.$router.push({
+          path: `/singer/${ singer.mid }`
+        })
+      }
     }
   }
 </script>
