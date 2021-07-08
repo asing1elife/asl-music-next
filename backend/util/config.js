@@ -10,13 +10,16 @@ module.exports = {
   BASE_URL: 'https://y.qq.com',
   RECOMMEND_URL: 'https://u.y.qq.com/cgi-bin/musics.fcg',
   SINGER_URL: 'https://u.y.qq.com/cgi-bin/musics.fcg',
+  SONG_URL: 'https://u.y.qq.com/cgi-bin/musics.fcg',
 
   // 专辑图片加载失败的默认显示
   FALLBACK_PIC_URL: 'https://y.gtimg.cn/mediastyle/music_v11/extra/default_300x300.jpg?max_age=31536000',
 
+  TOKEN: 5381,
+
   // 公共参数
   commonParams: {
-    g_tk: 5381,
+    g_tk: this.TOKEN,
     loginUin: 0,
     hostUin: 0,
     inCharset: 'utf8',

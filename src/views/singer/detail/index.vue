@@ -9,6 +9,7 @@
 
 <script>
   import singerService from '@/service/singer'
+  import songService from '@/service/song'
 
   export default {
     name: 'singerDetail',
@@ -24,10 +25,13 @@
       }
     },
     async created () {
+      // 获取歌手详情
       const result = await singerService.detail(this.singer.mid)
 
-      this.songs = result.songs
-      console.log(result)
+      // 获取歌曲列表，以及 URL
+      this.songs = await songService.url(result.songs)
+
+      console.log(this.songs)
     }
   }
 </script>

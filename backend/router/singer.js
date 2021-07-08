@@ -50,12 +50,14 @@ function registerSinger (app) {
  */
 function registerSingerDetail (app) {
   app.get('/api/singer/detail', (req, res) => {
+    const singerMid = req.query.mid
+
     const data = JSON.stringify({
       comm: { ct: 24, cv: 0 },
       singerSongList: {
         method: 'GetSingerSongList',
         // req.query.mid 由前端传入
-        param: { order: 1, singerMid: req.query.mid, begin: 0, num: 100 },
+        param: { order: 1, singerMid: singerMid, begin: 0, num: 100 },
         module: 'musichall.song_list_server'
       }
     })
