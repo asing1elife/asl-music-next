@@ -21,3 +21,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.icon-play:before {
+  content: "\e60a";
+}
+
+.icon-back:before {
+  content: "\e679";
+}
