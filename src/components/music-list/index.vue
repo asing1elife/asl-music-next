@@ -5,7 +5,10 @@
       ref="picRef"
       :style="picWrapperStyle"
     >
-      <div class="pic-filter"></div>
+      <div
+        class="pic-filter"
+        :style="picFilterStyle"
+      ></div>
       <div class="header">
         <a
           href="javascript:"
@@ -28,16 +31,11 @@
       class="song-wrapper"
       v-loading="!songs.length"
       :style="songWrapperStyle"
+      :probe-type="3"
+      @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <div
-          class="song-item"
-          v-for="song in songs"
-          :key="song.id"
-        >
-          <p class="title">{{song.name}}</p>
-          <p class="desc">{{song.singer}} - {{song.album}}</p>
-        </div>
+        <m-song-list :songs="songs"></m-song-list>
       </div>
     </m-scroll>
   </div>
@@ -45,11 +43,14 @@
 
 <script>
   import MScroll from '@/components/base/scroll'
+  import MSongList from '@/components/base/song-list'
+  import useScroll from './use-scroll'
 
   export default {
     name: 'm-music-list',
     components: {
-      MScroll
+      MScroll,
+      MSongList
     },
     props: {
       singer: {
@@ -61,25 +62,92 @@
         default: () => []
       }
     },
-    data () {
-      return {
-        picWrapperHeight: '0'
-      }
-    },
+    /**
+     * 这里计算属性没有挪到 setup 中编写
+     * 是因为 songWrapperTop 需要 DOM 渲染之后动态获取，无法直接在 computed 中获取
+     * 尝试在 computed 中使用 await nextTick ，并无法实现
+     */
     computed: {
       picWrapperStyle () {
-        return `background-image: url(${ this.singer && this.singer.pic })`
+        const scrollY = this.scrollY
+        const songWrapperTop = this.songWrapperTop
+        const topDistance = this.topDistance
+
+        let paddingTop = '70%'
+        let backgroundSize = 'cover'
+        const backgroundImage = `url(${ this.singer.pic })`
+
+        if (scrollY > 0) {
+          // 计算放大比例
+          const zoomScale = scrollY / songWrapperTop * 100 + 100
+
+          // 背景图的可视区域跟随列表向下拉动时，一起变大
+          paddingTop = `${ topDistance }px`
+          // 列表向下拉动时，背景图变大
+          backgroundSize = `${ zoomScale }%`
+        }
+
+        return {
+          backgroundImage,
+          backgroundSize,
+          paddingTop
+        }
       },
       songWrapperStyle () {
-        return `top: ${ this.picWrapperHeight }px`
+        const songWrapperTop = this.songWrapperTop
+        const topDistance = this.topDistance
+        const HEADER_HEIGHT = 42
+
+        let top
+        let overflow
+
+        if (topDistance === 0 || topDistance > HEADER_HEIGHT) {
+          // 如果列表到顶部的距离大于顶栏，则允许列表溢出滚动区域
+          top = `${ songWrapperTop }px`
+          overflow = 'visible'
+        } else {
+          // 否则将滚动区域到顶部的距离写死，并限制列表不能溢出滚动区域
+          top = `${ HEADER_HEIGHT }px`
+          overflow = 'hidden'
+        }
+
+        return {
+          top,
+          overflow
+        }
+      },
+      picFilterStyle () {
+        const scrollY = this.scrollY
+
+        let backdropFilter = 'blur(0)'
+
+        if (scrollY < 0) {
+          // 根据向上滚动距离的绝对值来计算模糊比例
+          // 但模糊比例的最大值不能大于 10
+          const blurScale = Math.min(10, Math.abs(scrollY) * 0.1)
+
+          backdropFilter = `blur(${ blurScale }px)`
+        }
+
+        return {
+          backdropFilter
+        }
       }
-    },
-    mounted () {
-      this.picWrapperHeight = this.$refs.picRef.clientHeight
     },
     methods: {
       toBack () {
         this.$router.back()
+      }
+    },
+    setup () {
+      const { picRef, scrollY, songWrapperTop, topDistance, onScroll } = useScroll()
+
+      return {
+        picRef,
+        scrollY,
+        songWrapperTop,
+        topDistance,
+        onScroll
       }
     }
   }
@@ -96,6 +164,7 @@
       width: 100%;
       padding-top: 70%;
       background-size: cover;
+      background-position: top center;
 
       .pic-filter {
         position: absolute;
@@ -145,22 +214,13 @@
 
     .song-wrapper {
       width: 100%;
-      overflow: hidden;
       position: absolute;
       bottom: 0;
+      z-index: 2;
 
       .song-list-wrapper {
+        background-color: $color-background;
         padding: 30px 30px 10px 30px;
-
-        .song-item {
-          margin-bottom: 20px;
-
-          .desc {
-            color: $color-text-d;
-            margin-top: 10px;
-            font-size: $font-size-medium;
-          }
-        }
       }
     }
   }
