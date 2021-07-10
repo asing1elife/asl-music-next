@@ -16,7 +16,8 @@
     "@better-scroll/core": "^2.4.1",
     "@better-scroll/slide": "^2.4.1",
     "@better-scroll/observe-dom": "^2.4.1",
-    "vue3-lazy": "^1.0.0-alpha.1"
+    "vue3-lazy": "^1.0.0-alpha.1",
+    "good-storage": "^1.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

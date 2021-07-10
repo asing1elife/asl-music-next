@@ -17,7 +17,7 @@
         >
           <i class="icon icon-back"></i>
         </a>
-        {{singer.name}}
+        {{name}}
       </div>
       <a
         href="javascript:"
@@ -53,9 +53,13 @@
       MSongList
     },
     props: {
-      singer: {
-        type: Object,
-        default: () => {}
+      name: {
+        type: String,
+        default: ''
+      },
+      pic: {
+        type: String,
+        default: ''
       },
       songs: {
         type: Array,
@@ -75,7 +79,7 @@
 
         let paddingTop = '70%'
         let backgroundSize = 'cover'
-        const backgroundImage = `url(${ this.singer.pic })`
+        const backgroundImage = `url(${ this.pic })`
 
         if (scrollY > 0) {
           // 计算放大比例

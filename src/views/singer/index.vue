@@ -15,6 +15,8 @@
 <script>
   import MIndexList from '@/components/index-list'
   import singerService from '@/service/singer'
+  import storage from 'good-storage'
+  import { SINGER_KEY } from '@/assets/js/constant'
 
   export default {
     name: 'singer',
@@ -36,9 +38,16 @@
       onSingerSelect (singer) {
         this.singer = singer
 
+        // 缓存当前选中歌手
+        this._cacheSinger(singer)
+
         this.$router.push({
           path: `/singer/${ singer.mid }`
         })
+      },
+      // 缓存歌手
+      _cacheSinger (singer) {
+        storage.session.set(SINGER_KEY, singer)
       }
     }
   }

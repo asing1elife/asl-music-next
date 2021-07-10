@@ -21,8 +21,9 @@ const routes = [
     component: Singer,
     children: [
       {
-        path: ':id',
-        component: SingerDetail
+        path: ':mid',
+        component: SingerDetail,
+        props: true
       }
     ]
   },
