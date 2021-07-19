@@ -5,6 +5,7 @@
     <m-music-list
       :name="name"
       :pic="pic"
+      :loading="loading"
       :songs="songs"
     ></m-music-list>
   </div>
@@ -34,6 +35,7 @@
     },
     data () {
       return {
+        loading: true,
         songs: []
       }
     },
@@ -84,6 +86,8 @@
 
         // 获取歌曲列表，以及 URL
         this.songs = await songService.url(result.songs)
+
+        this.loading = false
       }
     }
   }

@@ -8,6 +8,7 @@
       @select="onSingerSelect"
     >
     </m-index-list>
+    <!-- https://next.router.vuejs.org/zh/guide/advanced/transitions.html -->
     <router-view v-slot="{ Component }">
       <transition name="slide">
         <component

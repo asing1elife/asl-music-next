@@ -8,6 +8,7 @@ import lazyLoading from 'vue3-lazy'
 
 // 自定义指令
 import loadingDirective from '@/components/base/loading/directive'
+import emptyDirective from '@/components/base/empty-tip/directive'
 
 // 引入全局样式文件
 import '@/assets/scss/index.scss'
@@ -20,4 +21,5 @@ createApp(App)
   })
   // 指令会被渲染为 v-loading
   .directive('loading', loadingDirective)
+  .directive('empty', emptyDirective)
   .mount('#app')

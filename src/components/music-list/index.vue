@@ -29,7 +29,8 @@
     </div>
     <m-scroll
       class="song-wrapper"
-      v-loading="!songs.length"
+      v-loading="loading"
+      v-empty="empty"
       :style="songWrapperStyle"
       :probe-type="3"
       @scroll="onScroll"
@@ -64,6 +65,10 @@
       songs: {
         type: Array,
         default: () => []
+      },
+      loading: {
+        type: Boolean,
+        default: true
       }
     },
     /**
@@ -72,6 +77,9 @@
      * 尝试在 computed 中使用 await nextTick ，并无法实现
      */
     computed: {
+      empty () {
+        return !this.loading && this.songs.length === 0
+      },
       picWrapperStyle () {
         const scrollY = this.scrollY
         const songWrapperTop = this.songWrapperTop
