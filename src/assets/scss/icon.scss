@@ -22,10 +22,54 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-like:before {
+  content: "\e603";
+}
+
+.icon-like-o:before {
+  content: "\e6eb";
+}
+
+.icon-down:before {
+  content: "\e69b";
+}
+
+.icon-loop:before {
+  content: "\e69d";
+}
+
+.icon-next:before {
+  content: "\e69e";
+}
+
+.icon-pause:before {
+  content: "\e69f";
+}
+
+.icon-previous:before {
+  content: "\e6a0";
+}
+
+.icon-single:before {
+  content: "\e6a1";
+}
+
 .icon-play:before {
-  content: "\e60a";
+  content: "\e6a2";
+}
+
+.icon-random:before {
+  content: "\e6a4";
 }
 
 .icon-back:before {
-  content: "\e679";
+  content: "\e6db";
+}
+
+.icon-mute:before {
+  content: "\e6e1";
+}
+
+.icon-logo:before {
+  content: "\e605";
 }

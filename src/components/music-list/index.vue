@@ -132,7 +132,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, .4);
+        background-color: $color-background-d;
         z-index: 1;
       }
 
@@ -141,18 +141,19 @@
         top: 0;
         width: calc(100% - 20px);
         height: 22px;
+        padding: 10px;
         line-height: 22px;
         text-align: center;
-        padding: 10px;
         font-size: $font-size-large;
         z-index: 2;
 
         .back-btn {
           position: absolute;
           left: 10px;
+          top: 5px;
 
           .icon {
-            font-size: $font-size-large-x;
+            font-size: $icon-size-s;
             color: $color-theme;
           }
         }
@@ -165,10 +166,16 @@
         bottom: 20px;
         transform: translate3d(-50%, 0, 0);
         border: 1px solid $color-theme;
-        padding: 10px 20px;
+        padding: 5px 20px;
+        display: flex;
+        align-items: center;
         border-radius: 20px;
         color: $color-theme;
         font-size: $font-size-medium;
+
+        .icon {
+          font-size: $icon-size-s;
+        }
       }
     }
 

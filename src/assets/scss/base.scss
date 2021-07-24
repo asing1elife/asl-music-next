@@ -7,11 +7,20 @@ body, html {
   color: $color-text;
 }
 
-/* 动画效果 */
+/* 页面动画效果 */
 .slide-enter-active, .slide-leave-active {
   transition: all .3s;
 }
 
 .slide-enter-from, .slide-leave-to {
   transform: translate3d(100%, 0, 0);
+}
+
+/* 播放器动画效果 */
+.player-enter-active, .player-leave-active {
+  transition: all .3s;
+}
+
+.player-enter-from, .player-leave-to {
+  transform: translate3d(0, 100%, 0);
 }
