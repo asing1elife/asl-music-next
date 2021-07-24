@@ -2,8 +2,9 @@
   <div class="song-list">
     <div
       class="song-item"
-      v-for="song in songs"
+      v-for="(song, index) in songs"
       :key="song.id"
+      @click="select(song, index)"
     >
       <p class="title">{{song.name}}</p>
       <p class="desc">{{song.singer}} - {{song.album}}</p>
@@ -18,6 +19,15 @@
       songs: {
         type: Array,
         default: () => []
+      }
+    },
+    emits: ['select'],
+    methods: {
+      select (song, index) {
+        this.$emit('select', {
+          song,
+          index
+        })
       }
     }
   }

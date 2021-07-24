@@ -1,5 +1,5 @@
 /**
- * v-loading 自定义指令
+ * 自定义指令
  * 参考 https://v3.cn.vuejs.org/guide/custom-directive.html
  */
 

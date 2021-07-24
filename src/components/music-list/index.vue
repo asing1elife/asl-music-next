@@ -36,7 +36,10 @@
       @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <m-song-list :songs="songs"></m-song-list>
+        <m-song-list
+          :songs="songs"
+          @select="select"
+        ></m-song-list>
       </div>
     </m-scroll>
   </div>
@@ -46,6 +49,7 @@
   import MScroll from '@/components/base/scroll'
   import MSongList from '@/components/base/song-list'
   import useScroll from './use-scroll'
+  import { mapActions } from 'vuex'
 
   export default {
     name: 'm-music-list',
@@ -71,94 +75,33 @@
         default: true
       }
     },
-    /**
-     * 这里计算属性没有挪到 setup 中编写
-     * 是因为 songWrapperTop 需要 DOM 渲染之后动态获取，无法直接在 computed 中获取
-     * 尝试在 computed 中使用 await nextTick ，并无法实现
-     */
     computed: {
       empty () {
         return !this.loading && this.songs.length === 0
-      },
-      picWrapperStyle () {
-        const scrollY = this.scrollY
-        const songWrapperTop = this.songWrapperTop
-        const topDistance = this.topDistance
-
-        let paddingTop = '70%'
-        let backgroundSize = 'cover'
-        const backgroundImage = `url(${ this.pic })`
-
-        if (scrollY > 0) {
-          // 计算放大比例
-          const zoomScale = scrollY / songWrapperTop * 100 + 100
-
-          // 背景图的可视区域跟随列表向下拉动时，一起变大
-          paddingTop = `${ topDistance }px`
-          // 列表向下拉动时，背景图变大
-          backgroundSize = `${ zoomScale }%`
-        }
-
-        return {
-          backgroundImage,
-          backgroundSize,
-          paddingTop
-        }
-      },
-      songWrapperStyle () {
-        const songWrapperTop = this.songWrapperTop
-        const topDistance = this.topDistance
-        const HEADER_HEIGHT = 42
-
-        let top
-        let overflow
-
-        if (topDistance === 0 || topDistance > HEADER_HEIGHT) {
-          // 如果列表到顶部的距离大于顶栏，则允许列表溢出滚动区域
-          top = `${ songWrapperTop }px`
-          overflow = 'visible'
-        } else {
-          // 否则将滚动区域到顶部的距离写死，并限制列表不能溢出滚动区域
-          top = `${ HEADER_HEIGHT }px`
-          overflow = 'hidden'
-        }
-
-        return {
-          top,
-          overflow
-        }
-      },
-      picFilterStyle () {
-        const scrollY = this.scrollY
-
-        let backdropFilter = 'blur(0)'
-
-        if (scrollY < 0) {
-          // 根据向上滚动距离的绝对值来计算模糊比例
-          // 但模糊比例的最大值不能大于 10
-          const blurScale = Math.min(10, Math.abs(scrollY) * 0.1)
-
-          backdropFilter = `blur(${ blurScale }px)`
-        }
-
-        return {
-          backdropFilter
-        }
       }
     },
     methods: {
+      ...mapActions([
+        'selectSong'
+      ]),
       toBack () {
         this.$router.back()
+      },
+      select ({ index }) {
+        this.selectSong({
+          songs: this.songs,
+          index
+        })
       }
     },
-    setup () {
-      const { picRef, scrollY, songWrapperTop, topDistance, onScroll } = useScroll()
+    setup (props) {
+      const { picRef, picWrapperStyle, songWrapperStyle, picFilterStyle, onScroll } = useScroll(props)
 
       return {
         picRef,
-        scrollY,
-        songWrapperTop,
-        topDistance,
+        picWrapperStyle,
+        songWrapperStyle,
+        picFilterStyle,
         onScroll
       }
     }
