@@ -22,6 +22,7 @@
       <a
         href="javascript:"
         class="play-btn"
+        @click="random"
       >
         <i class="icon icon-play"></i>
         随机播放全部
@@ -82,7 +83,8 @@
     },
     methods: {
       ...mapActions([
-        'selectSong'
+        'selectSong',
+        'randomPlay'
       ]),
       toBack () {
         this.$router.back()
@@ -92,6 +94,9 @@
           songs: this.songs,
           index
         })
+      },
+      random () {
+        this.randomPlay(this.songs)
       }
     },
     setup (props) {
