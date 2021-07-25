@@ -42,6 +42,7 @@
               <a
                 href="javascript:"
                 class="btn"
+                @click="prev"
               >
                 <i class="icon icon-previous"></i>
               </a>
@@ -55,6 +56,7 @@
               <a
                 href="javascript:"
                 class="btn"
+                @click="next"
               >
                 <i class="icon icon-next"></i>
               </a>
@@ -91,12 +93,33 @@
       const fullscreen = computed(() => store.state.fullscreen)
       const currentSong = computed(() => store.getters.currentSong)
       const playing = computed(() => store.state.playing)
+      const currentIndex = computed(() => store.state.currentIndex)
+      const playlist = computed(() => store.state.playlist)
 
       // 根据播放状态，切换按钮样式
       const playBtnClass = computed(() => {
         const status = playing.value ? 'pause' : 'play'
 
         return `icon icon-${ status }`
+      })
+
+      // 最后一首歌的索引
+      const lastIndex = computed(() => {
+        return playlist.value.length - 1
+      })
+
+      // 监听歌曲变化
+      watch(currentSong, (val) => {
+        if (!val.url || !val.pic) {
+          return
+        }
+
+        // 更新播放地址
+        const audioEl = audioRef.value
+        audioEl.setAttribute('src', val.url)
+
+        // 自动播放
+        store.commit('setPlaying', true)
       })
 
       // 关闭播放器
@@ -114,16 +137,28 @@
         store.commit('setPlaying', !playingVal)
       }
 
-      // 监听歌曲变化
-      watch(currentSong, (val) => {
-        if (!val.url || !val.pic) {
-          return
+      // 上一首
+      const prev = () => {
+        let index = currentIndex.value - 1
+
+        // 如果索引为负值，则切换到当前歌曲列表的最后一首
+        if (index < 0) {
+          index = lastIndex.value
         }
 
-        // 更新播放地址
-        const audioEl = audioRef.value
-        audioEl.setAttribute('src', val.url)
-      })
+        store.commit('setCurrentIndex', index)
+      }
+
+      // 下一首
+      const next = () => {
+        let index = currentIndex.value + 1
+
+        if (index > lastIndex.value) {
+          index = 0
+        }
+
+        store.commit('setCurrentIndex', index)
+      }
 
       return {
         audioRef,
@@ -131,7 +166,9 @@
         currentSong,
         playBtnClass,
         closePlayer,
-        togglePlay
+        togglePlay,
+        prev,
+        next
       }
     }
   }
