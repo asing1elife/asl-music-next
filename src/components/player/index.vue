@@ -48,8 +48,9 @@
               <a
                 href="javascript:"
                 class="btn play-btn"
+                @click="togglePlay"
               >
-                <i class="icon icon-play"></i>
+                <i :class="playBtnClass"></i>
               </a>
               <a
                 href="javascript:"
@@ -89,10 +90,28 @@
 
       const fullscreen = computed(() => store.state.fullscreen)
       const currentSong = computed(() => store.getters.currentSong)
+      const playing = computed(() => store.state.playing)
+
+      // 根据播放状态，切换按钮样式
+      const playBtnClass = computed(() => {
+        const status = playing.value ? 'pause' : 'play'
+
+        return `icon icon-${ status }`
+      })
 
       // 关闭播放器
       const closePlayer = () => {
         store.commit('setFullscreen', false)
+      }
+
+      // 切换播放状态
+      const togglePlay = () => {
+        const playingVal = playing.value
+
+        const audioEl = audioRef.value
+        playingVal ? audioEl.pause() : audioEl.play()
+
+        store.commit('setPlaying', !playingVal)
       }
 
       // 监听歌曲变化
@@ -110,7 +129,9 @@
         audioRef,
         fullscreen,
         currentSong,
-        closePlayer
+        playBtnClass,
+        closePlayer,
+        togglePlay
       }
     }
   }
