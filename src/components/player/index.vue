@@ -42,6 +42,7 @@
               <a
                 href="javascript:"
                 class="btn"
+                :class="disableCls"
                 @click="prev"
               >
                 <i class="icon icon-previous"></i>
@@ -49,13 +50,15 @@
               <a
                 href="javascript:"
                 class="btn play-btn"
+                :class="disableCls"
                 @click="togglePlay"
               >
-                <i :class="playBtnClass"></i>
+                <i :class="playBtnCls"></i>
               </a>
               <a
                 href="javascript:"
                 class="btn"
+                :class="disableCls"
                 @click="next"
               >
                 <i class="icon icon-next"></i>
@@ -76,6 +79,8 @@
     <audio
       autoplay
       ref="audioRef"
+      @canplay="readyHandler"
+      @error="errorHandler"
     ></audio>
   </div>
 </template>
@@ -87,9 +92,10 @@
   export default {
     name: 'm-player',
     setup () {
-      const store = useStore()
       const audioRef = ref(null)
+      const songReady = ref(false)
 
+      const store = useStore()
       const fullscreen = computed(() => store.state.fullscreen)
       const currentSong = computed(() => store.getters.currentSong)
       const playing = computed(() => store.state.playing)
@@ -97,10 +103,15 @@
       const playlist = computed(() => store.state.playlist)
 
       // 根据播放状态，切换按钮样式
-      const playBtnClass = computed(() => {
+      const playBtnCls = computed(() => {
         const status = playing.value ? 'pause' : 'play'
 
         return `icon icon-${ status }`
+      })
+
+      // 根据歌曲状态，控制按钮的禁用样式
+      const disableCls = computed(() => {
+        return songReady.value ? '' : 'disabled'
       })
 
       // 最后一首歌的索引
@@ -113,6 +124,9 @@
         if (!val.url || !val.pic) {
           return
         }
+
+        // 重置歌曲状态
+        songReady.value = false
 
         // 更新播放地址
         const audioEl = audioRef.value
@@ -129,6 +143,10 @@
 
       // 切换播放状态
       const togglePlay = () => {
+        if (!songReady.value) {
+          return
+        }
+
         const playingVal = playing.value
 
         const audioEl = audioRef.value
@@ -139,6 +157,10 @@
 
       // 上一首
       const prev = () => {
+        if (!songReady.value) {
+          return
+        }
+
         let index = currentIndex.value - 1
 
         // 如果索引为负值，则切换到当前歌曲列表的最后一首
@@ -151,8 +173,13 @@
 
       // 下一首
       const next = () => {
+        if (!songReady.value) {
+          return
+        }
+
         let index = currentIndex.value + 1
 
+        // 已经到最后一首歌，则切换到第一首
         if (index > lastIndex.value) {
           index = 0
         }
@@ -160,15 +187,33 @@
         store.commit('setCurrentIndex', index)
       }
 
+      // 监听歌曲状态
+      const readyHandler = () => {
+        if (songReady.value) {
+          return
+        }
+
+        songReady.value = true
+      }
+
+      // 监听错误状态
+      const errorHandler = () => {
+        // 当播放器加载错误时，直接更新歌曲状态，防止假死
+        songReady.value = true
+      }
+
       return {
         audioRef,
         fullscreen,
         currentSong,
-        playBtnClass,
+        playBtnCls,
+        disableCls,
         closePlayer,
         togglePlay,
         prev,
-        next
+        next,
+        readyHandler,
+        errorHandler
       }
     }
   }
@@ -302,6 +347,12 @@
           }
 
           .btn {
+            &.disabled {
+              .icon {
+                color: $color-text-l;
+              }
+            }
+
             .icon {
               font-size: $icon-size;
               color: $color-theme;
