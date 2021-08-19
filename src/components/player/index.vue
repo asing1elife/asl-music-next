@@ -86,8 +86,9 @@
 </template>
 
 <script>
-  import { useStore } from 'vuex'
-  import { computed, watch, ref } from 'vue'
+  import { ref } from 'vue'
+  import useStatus from './use-status'
+  import useControl from './use-control'
 
   export default {
     name: 'm-player',
@@ -95,117 +96,15 @@
       const audioRef = ref(null)
       const songReady = ref(false)
 
-      const store = useStore()
-      const fullscreen = computed(() => store.state.fullscreen)
-      const currentSong = computed(() => store.getters.currentSong)
-      const playing = computed(() => store.state.playing)
-      const currentIndex = computed(() => store.state.currentIndex)
-      const playlist = computed(() => store.state.playlist)
-
-      // 根据播放状态，切换按钮样式
-      const playBtnCls = computed(() => {
-        const status = playing.value ? 'pause' : 'play'
-
-        return `icon icon-${ status }`
-      })
-
-      // 根据歌曲状态，控制按钮的禁用样式
-      const disableCls = computed(() => {
-        return songReady.value ? '' : 'disabled'
-      })
-
-      // 最后一首歌的索引
-      const lastIndex = computed(() => {
-        return playlist.value.length - 1
-      })
-
-      // 监听歌曲变化
-      watch(currentSong, (val) => {
-        if (!val.url || !val.pic) {
-          return
-        }
-
-        // 重置歌曲状态
-        songReady.value = false
-
-        // 更新播放地址
-        const audioEl = audioRef.value
-        audioEl.setAttribute('src', val.url)
-
-        // 自动播放
-        store.commit('setPlaying', true)
-      })
-
-      // 关闭播放器
-      const closePlayer = () => {
-        store.commit('setFullscreen', false)
-      }
-
-      // 切换播放状态
-      const togglePlay = () => {
-        if (!songReady.value) {
-          return
-        }
-
-        const playingVal = playing.value
-
-        const audioEl = audioRef.value
-        playingVal ? audioEl.pause() : audioEl.play()
-
-        store.commit('setPlaying', !playingVal)
-      }
-
-      // 上一首
-      const prev = () => {
-        if (!songReady.value) {
-          return
-        }
-
-        let index = currentIndex.value - 1
-
-        // 如果索引为负值，则切换到当前歌曲列表的最后一首
-        if (index < 0) {
-          index = lastIndex.value
-        }
-
-        store.commit('setCurrentIndex', index)
-      }
-
-      // 下一首
-      const next = () => {
-        if (!songReady.value) {
-          return
-        }
-
-        let index = currentIndex.value + 1
-
-        // 已经到最后一首歌，则切换到第一首
-        if (index > lastIndex.value) {
-          index = 0
-        }
-
-        store.commit('setCurrentIndex', index)
-      }
-
-      // 监听歌曲状态
-      const readyHandler = () => {
-        if (songReady.value) {
-          return
-        }
-
-        songReady.value = true
-      }
-
-      // 监听错误状态
-      const errorHandler = () => {
-        // 当播放器加载错误时，直接更新歌曲状态，防止假死
-        songReady.value = true
-      }
+      // 当前歌曲状态监控
+      const { currentSong, disableCls, readyHandler, errorHandler } = useStatus(audioRef, songReady)
+      // 播放、切歌控制
+      const { fullscreen, playBtnCls, closePlayer, togglePlay, prev, next } = useControl(audioRef, songReady)
 
       return {
         audioRef,
-        fullscreen,
         currentSong,
+        fullscreen,
         playBtnCls,
         disableCls,
         closePlayer,
