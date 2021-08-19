@@ -34,8 +34,9 @@
               <a
                 href="javascript:"
                 class="btn"
+                @click="changeMode"
               >
-                <i class="icon icon-loop"></i>
+                <i :class="modeCls"></i>
               </a>
             </div>
             <div class="play-state">
@@ -89,6 +90,7 @@
   import { ref } from 'vue'
   import useStatus from './use-status'
   import useControl from './use-control'
+  import useMode from './use-mode'
 
   export default {
     name: 'm-player',
@@ -100,6 +102,8 @@
       const { currentSong, disableCls, readyHandler, errorHandler } = useStatus(audioRef, songReady)
       // 播放、切歌控制
       const { fullscreen, playBtnCls, closePlayer, togglePlay, prev, next } = useControl(audioRef, songReady)
+      // 切换模式
+      const { modeCls, changeMode } = useMode()
 
       return {
         audioRef,
@@ -107,7 +111,9 @@
         fullscreen,
         playBtnCls,
         disableCls,
+        modeCls,
         closePlayer,
+        changeMode,
         togglePlay,
         prev,
         next,

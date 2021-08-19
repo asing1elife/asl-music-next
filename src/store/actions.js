@@ -28,10 +28,32 @@ export function randomPlay ({ commit }, songs) {
 }
 
 /**
+ * 切换模式
+ */
+export function changeMode ({ commit, state, getters }, mode) {
+  // 随机播放需要打乱顺序
+  const playlist = mode === PLAY_MODE.random ? shuffle(state.sequences) : state.sequences
+  // 获取当前歌曲
+  const currentSongId = getters.currentSong.id
+  // 获取当前歌曲在新列表中的索引，防止切换模式时当前歌曲发生变化
+  const index = playlist.findIndex(song => song.id === currentSongId)
+
+  commonPlay({
+    commit,
+    playlist,
+    mode,
+    index
+  })
+}
+
+/**
  * 通用播放
  */
 function commonPlay ({ commit, songs, playlist = songs, mode = PLAY_MODE.sequence, index = 0 }) {
-  commit('setSequences', songs)
+  if (songs) {
+    commit('setSequences', songs)
+  }
+
   commit('setPlaylist', playlist)
   commit('setPlayMode', mode)
   commit('setCurrentIndex', index)
