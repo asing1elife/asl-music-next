@@ -16,6 +16,9 @@ const mutations = {
   },
   setSequences (state, sequences) {
     state.sequences = sequences
+  },
+  setLikes (state, likes) {
+    state.likes = likes
   }
 }
 

@@ -69,8 +69,9 @@
               <a
                 href="javascript:"
                 class="btn"
+                @click="toggleLike"
               >
-                <i class="icon icon-like-o"></i>
+                <i :class="likeBtnCls"></i>
               </a>
             </div>
           </div>
@@ -91,6 +92,7 @@
   import useStatus from './use-status'
   import useControl from './use-control'
   import useMode from './use-mode'
+  import useLike from './use-like'
 
   export default {
     name: 'm-player',
@@ -104,6 +106,8 @@
       const { fullscreen, playBtnCls, closePlayer, togglePlay, prev, next } = useControl(audioRef, songReady)
       // 切换模式
       const { modeCls, changeMode } = useMode()
+      // 收藏操作
+      const { likeBtnCls, toggleLike } = useLike(currentSong)
 
       return {
         audioRef,
@@ -112,9 +116,11 @@
         playBtnCls,
         disableCls,
         modeCls,
+        likeBtnCls,
         closePlayer,
         changeMode,
         togglePlay,
+        toggleLike,
         prev,
         next,
         readyHandler,
@@ -125,146 +131,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .player-wrapper {
-    .normal-player {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: $color-background;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-
-      .bg-filter {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: $color-background-d;
-        backdrop-filter: blur(30px);
-        z-index: 1;
-      }
-
-      .header {
-        flex: 0 0 45px;
-        position: relative;
-        font-size: $font-size-large;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 2;
-
-        .fullscreen-btn {
-          position: absolute;
-          left: 10px;
-
-          .icon {
-            font-size: $icon-size-s;
-            color: $color-theme;
-          }
-        }
-      }
-
-      .body {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 2;
-
-        .singer-name {
-          flex: 0 0 16px;
-        }
-
-        .cover-page {
-          flex-grow: 1;
-        }
-      }
-
-      .footer {
-        flex: 0 0 130px;
-        display: flex;
-        flex-direction: column;
-        padding: 0 30px;
-        z-index: 2;
-
-        .progress {
-          flex: 0 0 30px;
-          display: flex;
-          align-items: center;
-
-          .begin-time,
-          .end-item {
-            flex: 0 0 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
-          .timeline {
-            flex-grow: 1;
-            position: relative;
-            height: 5px;
-            background-color: $color-background-d;
-            margin: 0 10px;
-            border-radius: 2px;
-
-            .pointer {
-              position: absolute;
-              width: 15px;
-              height: 15px;
-              border: 3px solid $color-text;
-              background-color: $color-theme;
-              border-radius: 50%;
-              left: 0;
-              top: 50%;
-              transform: translate3d(0, -50%, 0);
-            }
-          }
-        }
-
-        .operate {
-          flex: 0 0 60px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .play-mode,
-          .play-extra {
-            flex: 0 0 50px;
-          }
-
-          .play-state {
-            flex-grow: 1;
-            margin: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .play-btn {
-              .icon {
-                font-size: $icon-size-x;
-              }
-            }
-          }
-
-          .btn {
-            &.disabled {
-              .icon {
-                color: $color-text-l;
-              }
-            }
-
-            .icon {
-              font-size: $icon-size;
-              color: $color-theme;
-            }
-          }
-        }
-      }
-    }
-  }
+  @import 'index';
 </style>

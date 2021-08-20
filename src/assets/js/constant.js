@@ -1,5 +1,7 @@
 // 在缓存中存储歌手信息
 export const SINGER_KEY = '__singer__'
+// 在缓存中存储收藏信息
+export const LIKE_KEY = '__like__'
 
 // 播放模式
 export const PLAY_MODE = {

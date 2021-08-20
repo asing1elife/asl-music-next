@@ -1,4 +1,5 @@
-import { PLAY_MODE } from '@/assets/js/constant'
+import { PLAY_MODE, LIKE_KEY } from '@/assets/js/constant'
+import storage from 'good-storage'
 
 const state = {
   // 歌曲当前索引
@@ -12,7 +13,9 @@ const state = {
   // 歌曲列表
   playlist: [],
   // 歌曲序列
-  sequences: []
+  sequences: [],
+  // 收藏列表
+  likes: storage.get(LIKE_KEY, [])
 }
 
 export default state
